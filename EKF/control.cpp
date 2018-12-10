@@ -403,6 +403,7 @@ void Ekf::controlOpticalFlowFusion()
 			bool flight_motion_not_ok = _control_status.flags.in_air && !_range_aid_mode_enabled;
 			if ((preflight_motion_not_ok || flight_motion_not_ok) && !flow_required) {
 				_inhibit_flow_use = true;
+				ECL_WARN("Optical Flow Data is unsuitable");
 			}
 		} else if (_inhibit_flow_use && !_control_status.flags.opt_flow){
 			// allow use of optical flow if motion is suitable or we are reliant on it for flight navigation
@@ -594,6 +595,7 @@ void Ekf::controlGpsFusion()
 			ECL_WARN("EKF GPS data quality poor - stopping use");
 		}
 
+
 		// handle the case when we now have GPS, but have not been using it for an extended period
 		if (_control_status.flags.gps) {
 			// We are relying on aiding to constrain drift so after a specified time
@@ -676,6 +678,10 @@ void Ekf::controlGpsFusion()
 	} else if (_control_status.flags.gps && (_imu_sample_delayed.time_us - _gps_sample_delayed.time_us > (uint64_t)10e6)) {
 		_control_status.flags.gps = false;
 		ECL_WARN("EKF GPS data stopped");
+	}  else if (_control_status.flags.gps  &&  (_imu_sample_delayed.time_us - _gps_sample_delayed.time_us > (uint64_t)1e6) && _control_status.flags.opt_flow ) {
+		// Handle th ecase where we are using GPS and Optical flow , but GPS doesn't outputs data
+		_control_status.flags.gps = false;
+		ECL_WARN("EKF GPS no more gps with optical flow");
 	}
 }
 
