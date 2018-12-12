@@ -679,7 +679,7 @@ void Ekf::controlGpsFusion()
 		_control_status.flags.gps = false;
 		ECL_WARN("EKF GPS data stopped");
 	}  else if (_control_status.flags.gps  &&  (_imu_sample_delayed.time_us - _gps_sample_delayed.time_us > (uint64_t)1e6) && _control_status.flags.opt_flow ) {
-		// Handle th ecase where we are using GPS and Optical flow , but GPS doesn't outputs data
+		// Handle the case where we are using GPS and Optical flow , but GPS doesn't outputs data
 		_control_status.flags.gps = false;
 		ECL_WARN("EKF GPS no more gps with optical flow");
 	}
