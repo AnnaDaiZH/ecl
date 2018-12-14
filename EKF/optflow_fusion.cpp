@@ -237,6 +237,7 @@ void Ekf::fuseOptFlow()
 			} else {
 				// we need to reinitialise the covariance matrix and abort this fusion step
 				initialiseCovariance();
+				PX4_WARN("initialiseCovariance \n");
 				return;
 			}
 
