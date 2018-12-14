@@ -45,6 +45,8 @@
 #include <mathlib/mathlib.h>
 #include <cfloat>
 
+#include <px4_log.h>
+
 void Ekf::fuseOptFlow()
 {
 	float gndclearance = fmaxf(_params.rng_gnd_clearance, 0.1f);
@@ -112,6 +114,7 @@ void Ekf::fuseOptFlow()
 		_flow_innov[1] = -vel_body(0) / range - opt_flow_rate(1); // flow around the Y axis
 
 	} else {
+		PX4_WARN("exceeding max flow rate");
 		return;
 	}
 
